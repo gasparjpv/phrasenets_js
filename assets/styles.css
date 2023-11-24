@@ -81,7 +81,7 @@ input {
 
 .graph-container {
   width: 93vw;
-  max-width: 1800px;
+  max-width: 1600px;
   height: 800px;
   /* background-color: #eee; Cor de fundo para visualização */
   display: flex;
