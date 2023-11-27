@@ -27,6 +27,7 @@
   <title>Phrase Nets</title>
   <script src="script.js" defer></script>
   <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -37,31 +38,31 @@
   </div>
 
   <div class="header-container">
-    
-
     <h2>Esta é uma aplicação da técnica "Mapping Text with Phrase Nets" de Frank van Ham, Martin Wattenberg, e Fernanda B. Viégas</h2>
 
     <h2>Ajuste os termos de separação e suba um arquivo de texto. O texto será tratado removendo acentos, espaços, tabulações, mudanças de linha e palavras de paragem.</h2>
     <div class="header-botons">
       <div class="textbox-container">
-        <label for="separadores">Coloque os termos de separação:</label><br>
-        <input type="text" id="separadores" onchange="updateSeparadores()"value="e, do, a, o, para, no, é">
+        <label for="separadores">Termos de Separação:</label><br>
+        <div class="graph-content">
+          <input type="text" id="separadores" value="e, do, a, o, para, no, é">
+          <button id="button-reload" class="button-reload" onclick="updateGraphic()" style="font-size:24px" disabled><i class="fa fa-refresh"></i></button>
+        </div>
         <input type="file" name="fileApproval" accept=".txt" onchange="readFile()">
       </div>
-        
-    
-        <div class="graph-container">
-          <svg width="960" height="600"></svg>
-        </div>
-
+    </div>
+    <div class="graph-container">
+      <svg width="960" height="600"></svg>
+    </div>
   </div>
 
-
   <script>
-    function subirTexto() {
-      // Lógica para lidar com a subida do texto
-      alert("Subindo o texto!");
-    }
+    document.getElementById("separadores").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("button-reload").click();
+      }
+    });
   </script>
 
 </body>

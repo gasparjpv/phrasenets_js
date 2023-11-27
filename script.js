@@ -1,10 +1,9 @@
-function resetGraph() {
-  // Remove todos os elementos SVG existentes
-  d3.select("svg").selectAll("*").remove();
-}
+var fileResult
 
-function createGraphic(data) {
-  // Seu código para criar o gráfico aqui...
+function updateGraphic() {
+  if (fileResult) {
+    createGraphic(fileResult);
+  }
 }
 
 function readFile() {
@@ -12,8 +11,9 @@ function readFile() {
   const reader = new FileReader();
 
   reader.addEventListener("load", () => {
-    resetGraph(); // Chama a função para redefinir o gráfico anterior
-    createGraphic(reader.result);
+    fileResult = reader.result;
+    document.getElementById("button-reload").disabled = false;
+    createGraphic(fileResult);
   }, false);
 
   if (file) {
@@ -180,6 +180,7 @@ function analisarTabelaResultado(tabela) {
 
 // Leitura do arquivo
 function createGraphic(data) {
+  d3.select("svg").selectAll("*").remove();
   let palavrasLigacao = document.getElementById("separadores").value;
     if (palavrasLigacao) {
       palavrasLigacao = palavrasLigacao.replace(/\s/g, "").split(",")
@@ -207,7 +208,6 @@ function createGraphic(data) {
   // Criar tabela de frequencias de palavras
   const tabelaFrequencia = criarTabelaFrequencia(textoSemPadrao);
 
-  //Criação do grafo
   const finalLinks = []
   const finalNodes = []
   const finalWords = []
@@ -232,7 +232,6 @@ function createGraphic(data) {
   const graph = {
     nodes: finalNodes,
     links: finalLinks
-  
   }
   var svg = d3.select("svg"),
     width = 1900, // Defina a largura desejada
@@ -248,12 +247,27 @@ function createGraphic(data) {
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
 
+
+
+    // Define as setas 
+  svg.append("defs").append("marker")
+      .attr("id", "arrowhead")
+      .attr("refX", 6) // Ajusta o tamanho das setas
+      .attr("refY", 2)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 4)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,0 L6,2 L0,4")
+      .attr("fill", "#000");
+
     var link = svg.append("g")
         .attr("class", "links")
         .selectAll("line")
         .data(graph.links)
         .enter().append("line")
-        .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+        .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
+        .attr("marker-end", "url(#arrowhead)");
 
     var node = svg.append("g")
         .attr("class", "nodes")
@@ -266,7 +280,7 @@ function createGraphic(data) {
         .data(graph.links)
         .attr("r", function(d) { return d.value * 3; });
 
-
+    // Crie um manipulador de arrastar e adicione-o ao objeto de nó
     var drag_handler = d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
@@ -293,15 +307,19 @@ function createGraphic(data) {
 
     function ticked() {
       link
-          .attr("x1", function(d) { return d.source.x; })
-          .attr("y1", function(d) { return d.source.y; })
-          .attr("x2", function(d) { return d.target.x; })
-          .attr("y2", function(d) { return d.target.y; });
-
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+    
+      // Adicione as setas nas extremidades das linhas
+      link.attr("marker-end", "url(#arrowhead)");
+    
+      // Posiciona os nós no gráfico
       node
-          .attr("transform", function(d) {
-            return "translate(" + d.x + "," + d.y + ")";
-          })
+        .attr("transform", function(d) {
+          return "translate(" + d.x + "," + d.y + ")";
+        });
     }
 
   function dragstarted(d) {
