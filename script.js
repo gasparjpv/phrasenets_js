@@ -38,7 +38,7 @@ function removerPadraoEspecifico(texto) {
 // Função para remover stop words
 function removerStopWords(texto) {
   const stopWords = [
-    'de', 'que', 'em', 'um', 'para', 'com', 'não', 'uma', 'os', 'no', 'se', 'na', 'por', 'mais', 'as', 'dos',
+    'que', 'em', 'um', 'com', 'não', 'uma', 'os', 'se', 'na', 'por', 'mais', 'as', 'dos',
     'como', 'mas', 'ao', 'ele', 'das', 'à', 'seu', 'sua', 'ou', 'quando', 'muito', 'nos', 'já', 'eu', 'também',
     'só', 'pelo', 'pela', 'até', 'isso', 'ela', 'entre', 'era', 'depois', 'sem', 'mesmo', 'aos', 'ter', 'seus',
     'quem', 'nas', 'me', 'esse', 'eles', 'está', 'você', 'tinha', 'foram', 'essa', 'num', 'nem', 'suas', 'meu',
@@ -224,7 +224,7 @@ function createGraphic(data) {
   })
 
   tabelaFiltrada.forEach(r => {
-    if (finalWords.indexOf(r.source) >= 2 && finalWords.indexOf(r.target) >= 1) {
+    if (finalWords.indexOf(r.source) >= 5 && finalWords.indexOf(r.target) >= 5) {
       finalLinks.push(r)
     }
   })
@@ -234,8 +234,8 @@ function createGraphic(data) {
     links: finalLinks
   }
   var svg = d3.select("svg"),
-    width = 1900, // Defina a largura desejada
-    height = 1000;
+    width = 1800, // Defina a largura desejada
+    height = 2500;
 
   svg.attr("width", width)
       .attr("height", height);
@@ -278,7 +278,7 @@ function createGraphic(data) {
     node.append("circle")
         .attr("fill", function(d) { return color(d.group); })
         .data(graph.links)
-        .attr("r", function(d) { return d.value * 3; });
+        .attr("r", function(d) { return d.value * 2; });
 
     // Crie um manipulador de arrastar e adicione-o ao objeto de nó
     var drag_handler = d3.drag()
