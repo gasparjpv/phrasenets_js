@@ -224,7 +224,7 @@ function createGraphic(data) {
   })
 
   tabelaFiltrada.forEach(r => {
-    if (finalWords.indexOf(r.source) >= 0 && finalWords.indexOf(r.target) >= 0) {
+    if (finalWords.indexOf(r.source) >= 2 && finalWords.indexOf(r.target) >= 1) {
       finalLinks.push(r)
     }
   })
